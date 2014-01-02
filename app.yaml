@@ -16,8 +16,8 @@ libraries:
 - name: pycrypto
   version: '2.6'
 
-builtins:
-- appstats: on
+#builtins:
+#- appstats: on
 
 handlers:
 - url: /assets
