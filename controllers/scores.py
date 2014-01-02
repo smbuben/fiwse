@@ -38,7 +38,7 @@ class Handler(base.RequestHandler):
                         results))
             team_scores.sort(key=lambda x: x.points, reverse=True)
             timestamp = datetime.datetime.utcnow()
-            memcache.add('all_teams_scores', (team_scores, timestamp), 10)
+            memcache.add('all_teams_scores', (team_scores, timestamp), 3600)
         else:
             team_scores, timestamp = cache_val
         template_vals = {

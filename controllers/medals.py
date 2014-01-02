@@ -34,7 +34,7 @@ class Handler(base.RequestHandler):
                             results.medals[country]))
                 timestamp = results.timestamp
             country_scores.sort(key=lambda x: x.points, reverse=True)
-            memcache.add('all_country_scores', (country_scores, timestamp), 10)
+            memcache.add('all_country_scores', (country_scores, timestamp), 3600)
         else:
             country_scores, timestamp = cache_val
         template_vals = {
