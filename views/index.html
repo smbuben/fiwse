@@ -1,0 +1,24 @@
+{% extends "template_root.html" %}
+
+{% block body_nav %}
+  <div class="navbar navbar-default navbar-static-top" role="banner">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">fiwse2014</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{{login_url}}">Sign in with your Google account</a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body_content %}
+  <div class="jumbotron">
+    <h1>fiwse2014</h1>
+    <p class="lead">fantasy international winter sporting event 2014</p>
+    <p>
+      <a class="btn btn-lg btn-primary" href="{{login_url}}">Sign in with your Google account</a>
+    </p>
+  </div>
+{% endblock %}

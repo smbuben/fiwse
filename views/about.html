@@ -1,0 +1,22 @@
+{% extends "template_ui.html" %}
+
+{% block body_content %}
+  <ul class="nav nav-tabs nav-justified">
+    <li class="active"><a href="#">about</a></li>
+    <li><a href="{{prefix}}/team">my team</a></li>
+    <li><a href="{{prefix}}/scores">fantasy scores</a></li>
+    <li><a href="{{prefix}}/medals">medal count</a></li>
+  </ul>
+
+  <div class="row">
+    <div class="col-sm-offset-1 col-sm-10">
+      <h3>About</h3>
+      <p>fiwse2014 (fantasy international winter sporting event 2014) is a salary-cap fantasy sports game based around a popular quadrennial cold-weather sports competition.<p>
+      <h3>Instructions</h3>
+      <p>Participating nations have been assigned values based on past competition performance. Choose <b>5 nations</b>, whose combined cost does not exceed <b>$100.00</b> for your team. Each country earns points according to the following formula:</p>
+      <blockquote>(300*<i>gold medals</i> + 200*<i>silver medals</i> + 100*<i>bronze medals</i>) / <i>number of competing athletes</i></blockquote>
+      <p>Your team can be updated at any time up to <b>February 6, 2014 (UTC)</b> at which point all rosters will be locked.</p>
+      <p>Point totals and standings will be updated regularly during the competition with the team(s) achieving the highest point total at the end of the competition being declared <b>victorious</b> and maybe winning certificates of accomplishment.</p>
+    </div>
+  </div>
+{% endblock %}

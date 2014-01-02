@@ -1,0 +1,50 @@
+#
+# This file is a configuration file of the FIWSE project.
+#
+
+application: fiwse2014
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+libraries:
+- name: webapp2
+  version: '2.5.2'
+- name: jinja2
+  version: '2.6'
+- name: pycrypto
+  version: '2.6'
+
+builtins:
+- appstats: on
+
+handlers:
+- url: /assets
+  static_dir: static/assets
+
+- url: /revision
+  static_files: static/revision
+  upload: static/revision
+  mime_type: text/plain
+  expiration: 10m
+
+- url: /robots\.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /ui.*
+  script: fiwse.iface_app
+  login: required
+
+- url: /.*
+  script: fiwse.default_app
+
+skip_files:
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+- ^uploader.*
+- ^TODO

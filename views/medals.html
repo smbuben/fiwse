@@ -1,0 +1,31 @@
+{% extends "template_ui.html" %}
+
+{% block body_content %}
+  <ul class="nav nav-tabs nav-justified">
+    <li><a href="{{prefix}}/about">about</a></li>
+    <li><a href="{{prefix}}/team">my team</a></li>
+    <li><a href="{{prefix}}/scores">fantasy scores</a></li>
+    <li class="active"><a href="#">medal count</a></li>
+  </ul>
+
+  <table class="table table-hover">
+    <thead>
+      <th>#</th>
+      <th>Country</th>
+      <th>Gold</th>
+      <th>Silver</th>
+      <th>Bronze</th>
+      <th>Points</th>
+    </thead>
+    {% for country in countries %}
+    <tr>
+      <td>{{loop.index}}</td>
+      <td>{{country.name}}</td>
+      <td>{{country.gold}}</td>
+      <td>{{country.silver}}</td>
+      <td>{{country.bronze}}</td>
+      <td>{{'{:2.2f}'.format(country.points)}}</td>
+    </tr> 
+    {% endfor %}
+  </table>
+{% endblock %}

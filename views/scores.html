@@ -1,0 +1,27 @@
+{% extends "template_ui.html" %}
+
+{% block body_content %}
+  <ul class="nav nav-tabs nav-justified">
+    <li><a href="{{prefix}}/about">about</a></li>
+    <li><a href="{{prefix}}/team">my team</a></li>
+    <li class="active"><a href="#">fantasy scores</a></li>
+    <li><a href="{{prefix}}/medals">medal count</a></li>
+  </ul>
+
+  <table class="table table-hover">
+    <thead>
+      <th>#</th>
+      <th>Manager</th>
+      <th>Countries</th>
+      <th>Score</th>
+    </thead>
+    {% for team in teams %}
+    <tr {% if user == team.owner %}class="active"{% endif %}>
+      <td>{{loop.index}}</td>
+      <td>{{team.manager}}</td>
+      <td>{{team.details}}</td>
+      <td>{{'{:2.2f}'.format(team.points)}}</td>
+    </tr> 
+    {% endfor %}
+  </table>
+{% endblock %}
