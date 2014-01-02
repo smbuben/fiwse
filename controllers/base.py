@@ -66,3 +66,19 @@ class RequestHandler(webapp2.RequestHandler):
     def home(self):
         self.go()
 
+    flash_failure = 0
+    flash_warn = 1
+    flash_info = 2
+    flash_success = 3
+
+    def flash(self, message, level=flash_failure):
+        if not self.session.has_key('messages'):
+            self.session['messages'] = list()
+        level = {
+            self.flash_failure :    'alert-danger',
+            self.flash_warn :       'alert-warning',
+            self.flash_info :       'alert-info',
+            self.flash_success :    'alert-success',
+        }[level]
+        self.session.add_flash(message, level)
+

@@ -12,7 +12,15 @@ class Handler(base.RequestHandler):
         self.render('team.html', **template_vals)
 
     def post(self):
-        models.Team.update(
-            self.request.get('manager'),
-            self.request.get_all('countries'))
+        try:
+            models.Team.update(
+                self.request.get('manager'),
+                self.request.get_all('countries'))
+        except:
+            self.flash(
+                'Your team was not updated. The manager field must not be '
+                'empty, and you must choose 5 countries whose total cost is '
+                'less than $100.00.')
+        else:
+            self.flash('Your team was updated successfully!', self.flash_success)
         self.go('/team')
