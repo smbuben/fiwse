@@ -203,6 +203,17 @@ class Team(ndb.Model):
         team.put()
 
     @classmethod
+    def update_manager_only(cls, manager):
+        """
+        Update the manager name of an already created user's team.
+        """
+        user = users.get_current_user()
+        key = ndb.Key(League, 'default', Team, user.user_id())
+        team = key.get()
+        team.populate(manager=manager)
+        team.put()
+
+    @classmethod
     def delete(cls):
         """
         Delete a user's team.

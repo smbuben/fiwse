@@ -3,6 +3,7 @@ import webapp2_extras.sessions
 import webapp2_extras.jinja2
 import hashlib
 import time
+import datetime
 from google.appengine.api import users
 
 
@@ -12,6 +13,9 @@ class RequestHandler(webapp2.RequestHandler):
         # Get the session store for this request.
         self.session_store = \
             webapp2_extras.sessions.get_store(request=self.request)
+        # Determine if this is the fantasy season is active.
+        self.season_active = \
+            datetime.datetime.utcnow() > datetime.datetime(2014, 2, 6, 0, 0)
         # Validate the XSRF token for every HTTP POST.
         if self.request.method.lower() == 'post':
             request_token = self.request.get('_xsrf_token')
@@ -56,6 +60,7 @@ class RequestHandler(webapp2.RequestHandler):
                 'xsrf_key' :    '_xsrf_token',
                 'xsrf_value' :  self.xsrf_token(),
                 'messages' :    self.session.get_flashes(),
+                'season_active' : self.season_active,
             })
         rendered_view = self.jinja2.render_template(template, **template_vals)
         self.response.write(rendered_view)
