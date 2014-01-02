@@ -1,6 +1,7 @@
 from google.appengine.api import memcache
 import base
 import models
+import datetime
 
 
 class Score:
@@ -23,8 +24,8 @@ class Score:
 class Handler(base.RequestHandler):
 
     def get(self):
-        team_scores = memcache.get('all_teams_scores')
-        if team_scores is None:
+        cache_val = memcache.get('all_teams_scores')
+        if cache_val is None:
             team_scores = list()
             teams = models.Team.getall()
             results = models.Results.get()
@@ -36,9 +37,13 @@ class Handler(base.RequestHandler):
                         team.countries,
                         results))
             team_scores.sort(key=lambda x: x.points, reverse=True)
-            memcache.add('all_teams_scores', team_scores, 10)
+            timestamp = datetime.datetime.utcnow()
+            memcache.add('all_teams_scores', (team_scores, timestamp), 10)
+        else:
+            team_scores, timestamp = cache_val
         template_vals = {
             'teams' : team_scores,
+            'timestamp' : timestamp,
         }
         self.render('scores.html', **template_vals)
 

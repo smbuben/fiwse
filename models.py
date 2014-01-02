@@ -237,6 +237,10 @@ class Results(ndb.Model):
     medals = ndb.PickleProperty(
         required=True,
         indexed=False)
+    timestamp = ndb.DateTimeProperty(
+        required=True,
+        indexed=False,
+        auto_now=True)
 
     @classmethod
     def get(cls):
