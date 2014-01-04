@@ -13,6 +13,9 @@ class Defaults:
     # Default session cookie key.
     session_cookie_key = ''
 
+    # Default salt value.
+    salt = ''
+
     def __init__(self):
         logging.warn('Using built-in default configuration.')
         logging.warn('Create a custom private configuration to fix.')
@@ -39,6 +42,7 @@ wsgi_config = {
         {
             'template_path' : 'views',
         },
+    'private_salt' : private.salt,
     }
 
 wsgi_debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')

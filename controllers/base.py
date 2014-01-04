@@ -37,7 +37,7 @@ class RequestHandler(webapp2.RequestHandler):
                 str(time.time())
                 + user.email()
                 + user.user_id()
-                + 'fixme add a private salt')
+                + self.app.config.get('private_salt'))
             token = self.session['_xsrf_token'] = sha1.hexdigest()
         return token
 
