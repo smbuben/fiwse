@@ -32,7 +32,7 @@ class RequestHandler(webapp2.RequestHandler):
         # Get the session store for this request.
         self.session_store = \
             webapp2_extras.sessions.get_store(request=self.request)
-        # Determine if this is the fantasy season is active.
+        # Determine if the fantasy season is active.
         self.season_active = \
             datetime.datetime.utcnow() > datetime.datetime(2014, 2, 6, 0, 0)
         # Validate the XSRF token for every HTTP POST.
