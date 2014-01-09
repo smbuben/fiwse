@@ -51,6 +51,10 @@ if __name__ == '__main__':
         action='store', dest='scorefile', type=str,
         default=None,
         help='Read Wikipedia score data from file instead of the network.')
+    parser.add_argument(
+        '-p', '--pretend',
+        action='store_true', dest='pretend',
+        help='Do not actually upload score data.')
     args = parser.parse_args()
 
     #
@@ -104,11 +108,14 @@ if __name__ == '__main__':
     # Upload to fiwse instance.
     #
 
-    print 'Uploading scores to %s' % (args.dst)
-    params = urllib.urlencode({
-        'message' : base64.b64encode(message),
-        'signature' : base64.b64encode(signature),
-    })
-    inf = urllib.urlopen(args.dst, params)
-    print 'Response: %d' % (inf.getcode())
+    if not args.pretend:
+        print 'Uploading scores to %s' % (args.dst)
+        params = urllib.urlencode({
+            'message' : base64.b64encode(message),
+            'signature' : base64.b64encode(signature),
+        })
+        inf = urllib.urlopen(args.dst, params)
+        print 'Response: %d' % (inf.getcode())
+    else:
+        print 'Pretend mode enabled. Not uploading to %s' % (args.dst)
 
