@@ -35,6 +35,9 @@ class Defaults:
     # Default salt value.
     salt = ''
 
+    # Default public key (cannot upload data without this).
+    public_key = ''
+
     def __init__(self):
         logging.warn('Using built-in default configuration.')
         logging.warn('Create a custom private configuration to fix.')
@@ -62,6 +65,7 @@ wsgi_config = {
             'template_path' : 'views',
         },
     'private_salt' : private.salt,
+    'public_key' : private.public_key,
     }
 
 wsgi_debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
