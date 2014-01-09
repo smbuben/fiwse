@@ -1,5 +1,5 @@
 *.pyc
 private*
 revision*
-uploader*
+uploader/*.pem
 TODO
