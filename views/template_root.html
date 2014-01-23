@@ -29,10 +29,6 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
   <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -57,6 +53,11 @@
     </div>
   </div>
 
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+  {% block scripts %}{% endblock %}
 </body>
 {% endautoescape %}
 </html>
