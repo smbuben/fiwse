@@ -3,6 +3,7 @@
  # This file is part of the fiwse project.
  #
  # Copyright (C) 2014 Stephen M Buben <smbuben@gmail.com>
+ # Copyright (C) 2014 Chris Owens
  #
  # fiwse is free software: you can redistribute it and/or modify
  # it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +22,18 @@
 
 {% extends "template_ui.html" %}
 
-<link href="table.css" rel="stylesheet">
+{% block custom_style %}
+  <style>
+    .affix {
+      position: static;
+    }
+    @media (min-width: 768px) {
+      .affix {
+        position: fixed;
+      }
+    }
+  </style>
+{% endblock %}
 
 {% block body_content %}
   <ul class="nav nav-tabs nav-justified">
@@ -41,52 +53,58 @@
   {% endfor %}
 
   {% if not season_active %}
-    <form class="form-horizontal" role="form" method="post" action="{{prefix}}/team">
-      <input type="hidden" name="{{xsrf_key}}" value="{{xsrf_value}}">
-
-      <div class="form-group">
-        <label for="team-manager" class="col-sm-2 control-label">manager name</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="team-manager" maxlength="40" name="manager" {% if team %}value="{{team.manager}}"{% else %}placeholder="my manager name"{% endif %}><span class="help-block">this is the name displayed with your team; it is the <b>only</b> identification of team ownership</span>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          <form class="form-horizontal" role="form" method="post" action="{{prefix}}/team">
+            <input type="hidden" name="{{xsrf_key}}" value="{{xsrf_value}}">
+            <div class="form-group">
+              <label for="team-manager" class="col-sm-2 control-label">manager name</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="team-manager" maxlength="40" name="manager" {% if team %}value="{{team.manager}}"{% else %}placeholder="my manager name"{% endif %}><span class="help-block">this is the name displayed with your team; it is the <b>only</b> identification of team ownership</span>
+              </div>
+            </div>
+            <label id="totals" class="col-sm-2 control-label">country selection (choose 5 and limit $100)</label>
+            <div class="col-sm-10">
+              <div class="checkbox">
+                <table id="countryTable" class="table table-hover">
+                  <thead>
+                    <th></th>
+                    <th>cost</th>
+                    <th>country</th>
+                    <th>athletes (projected)</th>
+                  </thead>
+                    {% for idx in countries.keys() %}
+                    <tr {% if team and idx in team.countries %}class="active"{% endif %}>
+                      <td><input type="checkbox" name="countries" value="{{idx}}" {% if team and idx in team.countries %}checked="checked"{% endif %}></td>
+                      <td id="cost">{{"{:2.2f}".format(countries[idx]['cost'])}}</td>
+                      <td>{{countries[idx]['name']}}</td>
+                      <td>{{countries[idx]['athletes']}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-sm-3">
+            <div id="teamTable" data-spy="affix">
+              <table id="current-team" class="table">
+                <thead>
+                  <th>country</th>
+                  <th>cost</th>
+                </thead>
+              </table>
+            </div>
         </div>
       </div>
-      <label id="totals" class="col-sm-2 control-label">country selection (choose 5 and limit $100)</label>
-      <div class="col-sm-8">
-        <div class="checkbox">
-          <table id="countryTable" class="table table-hover">
-            <thead>
-              <th></th>
-              <th>cost</th>
-              <th>country</th>
-              <th>athletes (projected)</th>
-            </thead>
-              {% for idx in countries.keys() %}
-              <tr {% if team and idx in team.countries %}class="active"{% endif %}>
-                <td><input type="checkbox" name="countries" value="{{idx}}" {% if team and idx in team.countries %}checked="checked"{% endif %}></td>
-                <td id="cost">{{"{:2.2f}".format(countries[idx]['cost'])}}</td>
-                <td>{{countries[idx]['name']}}</td>
-                <td>{{countries[idx]['athletes']}}</td>
-              </tr>
-              {% endfor %}
-            </table>
-          </div>
-        </div>
-        <div id="teamTable" class="col-sm-offset-7 col-sm-2" data-spy="affix">
-          <table id="current-team" class="table table-hover">
-            <thead>
-              <th>country</th>
-              <th>cost</th>
-              <th></th>
-            </thead>
-          </table> 
-	</div>	
-      </div>
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-default">update</button>
-        </div>
-      </div>
-    </form>
+    </div>
+  </div>
   {% else %}
     {% if team %}
       <div class="alert alert-info text-center">
@@ -115,7 +133,7 @@
   {% endif %}
 {% endblock %}
 
-{% block scripts %}
+{% block custom_script %}
   <script>
     $(document).ready(function() {
       buildTable();
@@ -127,15 +145,14 @@
         } else {
           checkthis.attr('checked',false);
         }
-	
+
         buildTable();
-        //var len = $('input:checkbox[name=countries]:checked').length;
       });
     });
 
     function buildTable() {
       var numCountries = 0;
-      $('#current-team tr').not(function(){if ($(this).has('th').length){return true}}).remove();; 
+      $('#current-team tr').not(function(){if ($(this).has('th').length){return true}}).remove();;
       var total = parseFloat("0.0");
       $('#countryTable tr').each(function() {
         if ( $(this).find('input:checkbox:first').is(':checked') ) {
@@ -151,10 +168,10 @@
           {
             color = "red";
           }
-              
-          $('#current-team tr:last').after('<tr><td><font color='+color+'>'+country+'</font></td><td>'+cost+'</td></tr>');	
+
+          $('#current-team tr:last').after('<tr><td><font color="'+color+'">'+country+'</font></td><td>'+cost+'</td></tr>');
         }
-      }); 
+      });
 
       if(total < 100.01)
       {
@@ -166,8 +183,8 @@
       }
 
       remaining = 100 - total;
-      $('#current-team tr:last').after('<tr><td><font color='+color+'>total</font></td><td><font color='+color+'>'+total.toFixed(2)+'</font></td></tr>');	
-      $('#current-team tr:last').after('<tr><td><font color='+color+'>remaining</font></td><td><font color='+color+'>'+remaining.toFixed(2)+'</font></td></tr>');	
+      $('#current-team tr:last').after('<tr><td><font color="'+color+'">total</font></td><td><font color='+color+'>'+total.toFixed(2)+'</font></td></tr>');
+      $('#current-team tr:last').after('<tr><td><font color="'+color+'">remaining</font></td><td><font color='+color+'>'+remaining.toFixed(2)+'</font></td></tr>');
     }
 
   </script>

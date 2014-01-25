@@ -1,4 +1,0 @@
-#teamTable.affix, #teamTable.affix-top {
-position: fixed; /* to stop the div from scrolling */
-top: 0;          /* to fix the div at the top its containing element */
-}
