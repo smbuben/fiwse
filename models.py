@@ -154,7 +154,12 @@ class CountryData:
 
     def calculate_points_by_idx(self, idx, results):
         gold, silver, bronze = results
-        return float(300*gold + 200*silver + 100*bronze) / self.mapping[idx]['actual_athletes']
+        points = float(300 * gold + 200 * silver + 100 * bronze)
+        try:
+            points = points / self.mapping[idx]['actual_athletes']
+        except:
+            points = 0.0
+        return points
 
     def calculate_points_by_name(self, name, results):
         return self.calculate_points_by_idx(self.inv_mapping[name], results)
