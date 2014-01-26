@@ -75,7 +75,7 @@ class CountryData:
             ('Hong Kong',        1.00,    1),
             ('Hungary',          1.00,   16),
             ('Iceland',          1.00,    5),
-            ('India (as independents)', 1.00, 3),
+            ('Individual Olympic Athletes', 1.00, 3),
             ('Iran',             1.00,    5),
             ('Ireland',          1.00,    4),
             ('Israel',           1.00,    5),
