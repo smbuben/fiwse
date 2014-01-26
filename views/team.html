@@ -79,7 +79,7 @@
                       <td><input type="checkbox" name="countries" value="{{idx}}" {% if team and idx in team.countries %}checked="checked"{% endif %}></td>
                       <td id="cost">{{"{:2.2f}".format(countries[idx]['cost'])}}</td>
                       <td>{{countries[idx]['name']}}</td>
-                      <td>{{countries[idx]['athletes']}}</td>
+                      <td>{{countries[idx]['projected_athletes']}}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -128,6 +128,42 @@
           </div>
         </div>
       </form>
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <table class="table table-hover">
+            <thead>
+              <th>country</th>
+              <th>cost</th>
+              <th>athletes</th>
+              <th>gold</th>
+              <th>silver</th>
+              <th>bronze</th>
+              <th>points</th>
+            </thead>
+            {% for country in team %}
+              <tr>
+                <td>{{country.name}}</td>
+                <td>{{country.cost}}</td>
+                <td>{{country.actual_athletes}} <small>({{country.projected_athletes}})</small></td>
+                <td>{{country.gold}}</td>
+                <td>{{country.silver}}</td>
+                <td>{{country.bronze}}</td>
+                <td>{{"{:2.2f}".format(country.points)}}</td>
+              </tr>
+            {% endfor %}
+            <tr>
+                <th>total</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>{{"{:2.2f}".format(total_points)}}</th>
+            </tr>
+          </table>
+        </div>
+      </div>
     {% else %}
       <div class="alert alert-danger text-center">
         Fantasy season is active. No new teams can be created.

@@ -21,14 +21,50 @@ import base
 import models
 
 
+class ActiveCountry:
+
+    def __init__(self, idx, results):
+        self.name = models.Countries.get_name_by_idx(idx)
+        self.cost = models.Countries.get_cost_by_idx(idx)
+        self.actual_athletes = \
+            models.Countries.get_actual_athletes_by_idx(idx)
+        self.projected_athletes = \
+            models.Countries.get_projected_athletes_by_idx(idx)
+        if results and results.medals.has_key(self.name):
+            medals = results.medals[self.name]
+            self.gold, self.silver, self.bronze = medals
+            self.points = models.Countries.calculate_points_by_idx(idx, medals)
+        else:
+            self.gold = self.silver = self.bronze = 0
+            self.points = 0.0
+
+
 class Handler(base.RequestHandler):
 
     def get(self):
-        template_vals = {
-            'team' : models.Team.get(),
-            'countries' : models.Countries.get_mapping(),
-        }
-        self.render('team.html', **template_vals)
+        if not self.season_active:
+            template_vals = {
+                'team' : models.Team.get(),
+                'countries' : models.Countries.get_mapping(),
+            }
+            self.render('team.html', **template_vals)
+        else:
+            if models.Team.get():
+                results = models.Results.get()
+                team = list()
+                for idx in models.Team.get().countries:
+                    team.append(ActiveCountry(idx, results))
+                total_points = 0.0
+                for country in team:
+                    total_points += country.points
+            else:
+                team = None
+                total_points = 0.0
+            template_vals = {
+                'team' : team,
+                'total_points' : total_points,
+            }
+            self.render('team.html', **template_vals)
 
     def post(self):
         if not self.season_active:

@@ -29,8 +29,11 @@ class Score:
         self.name = name
         self.gold, self.silver, self.bronze = results
         if name == 'not available':
+            self.athletes = 0
             self.points = 0.0
         else:
+            self.athletes = \
+                models.Countries.get_actual_athletes_by_name(name)
             self.points = \
                 models.Countries.calculate_points_by_name(name, results)
 
