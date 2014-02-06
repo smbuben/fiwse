@@ -49,19 +49,21 @@ class Handler(base.RequestHandler):
             }
             self.render('team.html', **template_vals)
         else:
-            if models.Team.get():
+            team = models.Team.get()
+            if team:
                 results = models.Results.get()
-                team = list()
+                selections = list()
                 for idx in models.Team.get().countries:
-                    team.append(ActiveCountry(idx, results))
+                    selections.append(ActiveCountry(idx, results))
                 total_points = 0.0
-                for country in team:
+                for country in selections:
                     total_points += country.points
             else:
-                team = None
+                selections = None
                 total_points = 0.0
             template_vals = {
                 'team' : team,
+                'selections' : selections,
                 'total_points' : total_points,
             }
             self.render('team.html', **template_vals)
