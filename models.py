@@ -140,6 +140,9 @@ class CountryData:
     def get_cost_by_idx(self, idx):
         return self.mapping[idx]['cost']
 
+    def get_cost_by_name(self, name):
+        return self.get_cost_by_idx(self.inv_mapping[name])
+
     def get_projected_athletes_by_idx(self, idx):
         return self.mapping[idx]['projected_athletes']
 

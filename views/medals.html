@@ -36,6 +36,7 @@
     <thead>
       <th>#</th>
       <th>country</th>
+      <th>cost</th>
       <th>athletes</th>
       <th>gold</th>
       <th>silver</th>
@@ -46,6 +47,7 @@
     <tr>
       <td>{{loop.index}}</td>
       <td>{{country.name}}</td>
+      <td>{{'{:2.2f}'.format(country.cost)}}</td>
       <td>{{country.athletes}}</td>
       <td>{{country.gold}}</td>
       <td>{{country.silver}}</td>
