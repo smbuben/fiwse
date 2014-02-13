@@ -32,7 +32,11 @@
   <br>
   <p class="small"><i>medal count last updated: {{timestamp}} UTC </i></p>
 
-  <table class="table table-hover">
+  <div class="alert alert-info text-center">
+    <p>Click the column headers to sort the medal table by any category.</p>
+  </div>
+
+  <table id="medal-table" class="table table-hover tablesorter">
     <thead>
       <th>#</th>
       <th>country</th>
@@ -56,4 +60,15 @@
     </tr> 
     {% endfor %}
   </table>
+{% endblock %}
+
+{% block custom_script %}
+  <script type="text/javascript" src="/assets/js/jquery.tablesorter.min.js"></script>
+  <script>
+    $(document).ready(function()
+      {
+        $("#medal-table").tablesorter();
+      }
+    );
+  </script>
 {% endblock %}
