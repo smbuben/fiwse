@@ -18,7 +18,10 @@
 #
 
 from google.appengine.ext import ndb
+from google.appengine.api import memcache
 from google.appengine.api import users
+import datetime
+import itertools
 import re
 
 
@@ -197,6 +200,22 @@ def validate_countries(prop, value):
     return value
 
 
+class TeamScore:
+    def __init__(self, owner, manager, countries, results):
+        self.owner = owner
+        self.manager = manager
+        self.details = ', '.join(
+            [Countries.get_name_by_idx(x) for x in countries])
+        points = 0.0
+        for idx in countries:
+            name = Countries.get_name_by_idx(idx)
+            if results and results.medals.has_key(name):
+                points += Countries.calculate_points_by_idx(
+                    idx,
+                    results.medals[name])
+        self.points = points
+
+
 class Team(ndb.Model):
     """
     Participating team.
@@ -270,6 +289,57 @@ class Team(ndb.Model):
         root = ndb.Key(League, 'default')
         return cls.query(ancestor=root).fetch()
 
+    @classmethod
+    def all_teams_scores(cls):
+        """
+        Retrive scores for all the teams.
+        """
+        cache_val = memcache.get('all_teams_scores')
+        if cache_val is None:
+            team_scores = list()
+            teams = cls.getall()
+            results = Results.get()
+            for team in teams:
+                team_scores.append(
+                    TeamScore(
+                        team.owner,
+                        team.manager,
+                        team.countries,
+                        results))
+            team_scores.sort(key=lambda x: x.points, reverse=True)
+            timestamp = datetime.datetime.utcnow()
+            memcache.add(
+                'all_teams_scores',
+                (team_scores, timestamp),
+                900)
+        else:
+            team_scores, timestamp = cache_val
+        return (team_scores, timestamp)
+
+
+class CountryScore:
+
+    def __init__(self, name=None, results=(0, 0, 0)):
+        if name is None:
+            self.name = 'not available'
+            self.gold = self.silver = silve.bronze = 0
+            self.cost = 0.0
+            self.athletes = 0
+            self.points = 0.0
+            self.points_per_cost = 0.0
+            self.points_per_athlete = 0.0
+        else:
+            self.name = name
+            self.gold, self.silver, self.bronze = results
+            self.athletes = \
+                Countries.get_actual_athletes_by_name(name)
+            self.cost = \
+                Countries.get_cost_by_name(name)
+            self.points = \
+                Countries.calculate_points_by_name(name, results)
+            self.points_per_cost = self.points / self.cost
+            self.points_per_athlete = self.points / self.athletes
+
 
 class Results(ndb.Model):
     """
@@ -306,4 +376,42 @@ class Results(ndb.Model):
             results.populate(medals=medals)
         results.put()
 
-
+    @classmethod
+    def all_country_scores(cls):
+        """
+        Retrieve all nation scores as calculated from the current results.
+        """
+        cache_val = memcache.get('all_country_scores')
+        if not cache_val:
+            results = cls.get()
+            if not results:
+                country_scores = [CountryScore()]
+                timestamp = datetime.datetime.utcnow()
+            else:
+                country_scores = list()
+                for country in results.medals.keys():
+                    country_scores.append(
+                        CountryScore(
+                            country,
+                            results.medals[country]))
+                timestamp = results.timestamp
+                country_scores.sort(key=lambda x: x.points, reverse=True)
+            optimal = None
+            for combination in itertools.combinations(country_scores, 5):
+                team = []
+                score = 0.0
+                cost = 0.0
+                for country in combination:
+                    team.append(country.name)
+                    score += country.points
+                    cost += country.cost
+                if cost <= 100.0:
+                    if optimal is None or score > optimal[1]:
+                        optimal = (', '.join(team), score, cost)
+            memcache.add(
+                'all_country_scores',
+                (country_scores, optimal, timestamp),
+                900)
+        else:
+            country_scores, optimal, timestamp = cache_val
+        return (country_scores, optimal, timestamp)

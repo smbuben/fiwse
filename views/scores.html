@@ -32,6 +32,12 @@
   <br>
   <p class="small"><i>score table last updated: {{timestamp}} UTC </i></p>
 
+  {% if optimal %}
+  <div class="alert alert-success text-center">
+    <p>The current optimal team is: {{optimal[0]}} with {{'{:2.2f}'.format(optimal[1])}} points for ${{optimal[2]}}</p>
+  </div>
+  {% endif %}
+
   <div class="alert alert-info text-center">
     <p>Don't see your team or the most recent updates? This page is only updated every 15 minutes.</p>
   </div>
