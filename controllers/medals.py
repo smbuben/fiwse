@@ -32,6 +32,8 @@ class Score:
             self.athletes = 0
             self.cost = 0.0
             self.points = 0.0
+            self.points_per_cost = 0.0
+            self.points_per_athlete = 0.0
         else:
             self.athletes = \
                 models.Countries.get_actual_athletes_by_name(name)
@@ -39,6 +41,8 @@ class Score:
                 models.Countries.get_cost_by_name(name)
             self.points = \
                 models.Countries.calculate_points_by_name(name, results)
+            self.points_per_cost = self.points / self.cost
+            self.points_per_athlete = self.points / self.athletes
 
 
 class Handler(base.RequestHandler):

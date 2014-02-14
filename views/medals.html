@@ -37,11 +37,13 @@
       <th>#</th>
       <th>country</th>
       <th>cost</th>
-      <th>athletes</th>
-      <th>gold</th>
-      <th>silver</th>
-      <th>bronze</th>
-      <th>points</th>
+      <th>ath</th>
+      <th>g</th>
+      <th>s</th>
+      <th>b</th>
+      <th>pts</th>
+      <th>ppc</th>
+      <th>ppa</th>
     </thead>
     {% for country in countries %}
     <tr>
@@ -53,6 +55,8 @@
       <td>{{country.silver}}</td>
       <td>{{country.bronze}}</td>
       <td>{{'{:2.2f}'.format(country.points)}}</td>
+      <td>{{'{:2.2f}'.format(country.points_per_cost)}}</td>
+      <td>{{'{:2.2f}'.format(country.points_per_athlete)}}</td>
     </tr> 
     {% endfor %}
   </table>
